@@ -49,7 +49,43 @@ func NewTCPClientHandler(address string, rack int, slot int) *TCPClientHandler {
 	return h
 }
 
-//TCPClient creator for a TCP client with address, rack and slot, implement from interface client
+// NewTCPClientHandler allocates a new TCPClientHandler.
+func NewTCPClientHandlerPG(address string, rack int, slot int) *TCPClientHandler {
+	h := &TCPClientHandler{}
+	h.Address = address
+	h.Timeout = tcpTimeout
+	h.IdleTimeout = tcpIdleTimeout
+	h.ConnectionType = connectionTypePG // Connect to the PLC as a PG
+	remoteTSAP := uint16(h.ConnectionType)<<8 + (uint16(rack) * 0x20) + uint16(slot)
+	h.setConnectionParameters(address, 0x0100, remoteTSAP)
+	return h
+}
+
+// NewTCPClientHandler allocates a new TCPClientHandler.
+func NewTCPClientHandlerOP(address string, rack int, slot int) *TCPClientHandler {
+	h := &TCPClientHandler{}
+	h.Address = address
+	h.Timeout = tcpTimeout
+	h.IdleTimeout = tcpIdleTimeout
+	h.ConnectionType = connectionTypeOP // Connect to the PLC as a PG
+	remoteTSAP := uint16(h.ConnectionType)<<8 + (uint16(rack) * 0x20) + uint16(slot)
+	h.setConnectionParameters(address, 0x0100, remoteTSAP)
+	return h
+}
+
+// NewTCPClientHandler allocates a new TCPClientHandler.
+func NewTCPClientHandlerBasic(address string, rack int, slot int) *TCPClientHandler {
+	h := &TCPClientHandler{}
+	h.Address = address
+	h.Timeout = tcpTimeout
+	h.IdleTimeout = tcpIdleTimeout
+	h.ConnectionType = connectionTypeBasic // Connect to the PLC as a PG
+	remoteTSAP := uint16(h.ConnectionType)<<8 + (uint16(rack) * 0x20) + uint16(slot)
+	h.setConnectionParameters(address, 0x0100, remoteTSAP)
+	return h
+}
+
+// TCPClient creator for a TCP client with address, rack and slot, implement from interface client
 func TCPClient(address string, rack int, slot int) Client {
 	handler := NewTCPClientHandler(address, rack, slot)
 	return NewClient(handler)
@@ -307,7 +343,7 @@ func (mb *tcpTransporter) closeIdle() {
 	}
 }
 
-//reserve for future use, need to verify the request and response
+// reserve for future use, need to verify the request and response
 func (mb *tcpPackager) Verify(request []byte, response []byte) (err error) {
 	return
 }

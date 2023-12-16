@@ -25,7 +25,7 @@ type ProtocolDataUnit struct {
 	Data []byte
 }
 
-//NewProtocolDataUnit ProtocolDataUnit Constructor
+// NewProtocolDataUnit ProtocolDataUnit Constructor
 func NewProtocolDataUnit(data []byte) ProtocolDataUnit {
 	pdu := ProtocolDataUnit{Data: data}
 	return pdu
@@ -40,7 +40,7 @@ type Transporter interface {
 func (e *S7Error) Error() string {
 	/* CPU tells there is no peripheral at address */
 	errMsg := int(e.High)*256 + int(e.Low)
-	message := "UNKNOWN ERROR: " + strconv.Itoa(errMsg)
+	message := ""
 	switch errMsg {
 	case 65487:
 		message = "API function called with an invalid parameter"
@@ -51,7 +51,7 @@ func (e *S7Error) Error() string {
 	case 61185:
 		message = "wrong ID2, cyclic job handle"
 	case 54278:
-		message = "information doesn’t exist"
+		message = "information doesn't exist"
 	case 54281:
 		message = "diagnosis: DP Error"
 	case 55298:
@@ -145,9 +145,9 @@ func (e *S7Error) Error() string {
 	case 517:
 		message = "interface not initialized; this may be due to an invalid MPI address (local or remote ID) or the PLC is not communicating on the MPI network"
 	case 518:
-		message = "can’t set handle"
+		message = "can't set handle"
 	case 519:
-		message = "data segment isn’t locked"
+		message = "data segment isn't locked"
 	case 521:
 		message = "data field incorrect"
 	case 770:
